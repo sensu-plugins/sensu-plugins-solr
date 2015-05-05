@@ -2,7 +2,6 @@
 # Created by Mike Crocker
 # Grab various metrics from apache-solr stats page
 #
-require 'rubygems' if RUBY_VERSION < '1.9.0'
 require 'sensu-plugin/metric/cli'
 require 'socket'
 require 'nokogiri'
