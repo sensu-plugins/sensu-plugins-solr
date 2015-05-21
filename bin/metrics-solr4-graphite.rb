@@ -47,7 +47,7 @@ class Solr4Graphite < Sensu::Plugin::Metric::CLI::Graphite
     warning "RestClient exception: #{e.class} -> #{e.message}"
   end
 
-  def run
+  def run #rubocop:disable all
     graphite_path = config[:scheme]
 
     # Process core stats
