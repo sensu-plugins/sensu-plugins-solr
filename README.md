@@ -1,6 +1,6 @@
 ## Sensu-Plugins-solr
 
-[![Build Status](https://travis-ci.org/sensu-plugins/sensu-plugins-solr.svg?branch=master)](https://travis-ci.org/sensu-plugins/sensu-plugins-solr)
+[ ![Build Status](https://travis-ci.org/sensu-plugins/sensu-plugins-solr.svg?branch=master)](https://travis-ci.org/sensu-plugins/sensu-plugins-solr)
 [![Gem Version](https://badge.fury.io/rb/sensu-plugins-solr.svg)](http://badge.fury.io/rb/sensu-plugins-solr)
 [![Code Climate](https://codeclimate.com/github/sensu-plugins/sensu-plugins-solr/badges/gpa.svg)](https://codeclimate.com/github/sensu-plugins/sensu-plugins-solr)
 [![Test Coverage](https://codeclimate.com/github/sensu-plugins/sensu-plugins-solr/badges/coverage.svg)](https://codeclimate.com/github/sensu-plugins/sensu-plugins-solr)
