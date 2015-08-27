@@ -43,7 +43,7 @@ class SolrGraphite < Sensu::Plugin::Metric::CLI::Graphite
     end
   end
 
-  def run # rubocop:disable all
+  def run
     # Capture initial stats page XML data. Sol4 1.4 takes a while to load stats page, the timeout accomidates that.
     doc = Nokogiri::XML(open("http://#{config[:host]}:#{config[:port]}/solr/admin/stats.jsp", read_timeout: 300))
 

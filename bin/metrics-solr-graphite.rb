@@ -42,7 +42,7 @@ class SolrGraphite < Sensu::Plugin::Metric::CLI::Graphite
          long: '--scheme SCHEME',
          default: "#{Socket.gethostname}.solr"
 
-  def run # rubocop:disable all
+  def run # rubocop:disable Metrics/AbcSize
     cores = []
     if config[:core]
       cores = [config[:core]]
