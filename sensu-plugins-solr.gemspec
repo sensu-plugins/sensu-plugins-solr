@@ -15,8 +15,8 @@ Gem::Specification.new do |s|
   s.authors                = ['Sensu-Plugins and contributors']
   s.cert_chain             = ['certs/sensu-plugins.pem']
   s.date                   = Date.today.to_s
-  s.description            = 'This plugin provides native Apache Solr instrumentation for monitoring 
-                              and metrics collection, including: service health, service connetivity, replication 
+  s.description            = 'This plugin provides native Apache Solr instrumentation for monitoring
+                              and metrics collection, including: service health, service connetivity, replication
                               status, and a variety of metrics including memory consumption, open file counts, and more.'
   s.email                  = '<sensu-users@googlegroups.com>'
   s.executables            = Dir.glob('bin/**/*').map { |file| File.basename(file) }
