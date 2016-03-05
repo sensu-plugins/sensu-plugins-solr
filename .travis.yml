@@ -1,19 +1,33 @@
 language: ruby
 cache:
-  - bundler
+- bundler
 install:
-  - bundle install
+- bundle install
 rvm:
-  - 1.9.3
-  - 2.0
-  - 2.1
-  - 2.2
+- 1.9.3
+- 2.0
+- 2.1
+- 2.2
 notifications:
   email:
     recipients:
-      - sensu-plugin@sensu-plugins.io
+    - sensu-plugin@sensu-plugins.io
     on_success: change
     on_failure: always
-
 script:
-  - 'bundle exec rake default'
+- bundle exec rake default
+- gem build sensu-plugins-solr.gemspec
+- gem install sensu-plugins-solr-*.gem
+deploy:
+  provider: rubygems
+  api_key:
+    secure: wU7d8QX7un8g/8U9hmarfXjRR40bcwr1LKxVxTqEbv/qZiOwOvtrYDJd8RIYVwvXX0k1/e4diyu4d6Dvtkc5b5nJZuYu5xDuIsc2R96UtV9m4wWlhgU1M9Mj8QzUVQJgjwzpjgYhRAm/UFSXQXaQMEjomk0KW1o5U8KY0qYj46Y=
+  gem: sensu-plugins-solr
+  on:
+    ags: true
+    all_branches: true
+    rvm: 1.9.3
+    rvm: 2.0
+    rvm: 2.1
+    rvm: 2.2
+    repo: sensu-plugins/sensu-plugins-solr

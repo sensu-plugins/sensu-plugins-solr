@@ -12,7 +12,7 @@ class SolrGraphite < Sensu::Plugin::Metric::CLI::Graphite
          short: '-h HOST',
          long: '--host HOST',
          description: 'Solr host to connect to',
-         default: "#{Socket.gethostname}"
+         default: Socket.gethostname.to_s
 
   option :port,
          short: '-p PORT',
@@ -24,7 +24,7 @@ class SolrGraphite < Sensu::Plugin::Metric::CLI::Graphite
   option :scheme,
          short: '-s SCHEME',
          long: '--scheme',
-         default: "#{Socket.gethostname}"
+         default: Socket.gethostname.to_s
 
   def lookingfor(needle, haystack)
     haystack.each_with_index do |element, index|
@@ -60,7 +60,7 @@ class SolrGraphite < Sensu::Plugin::Metric::CLI::Graphite
     ind_standard   = lookingfor('standard', doc.css('QUERYHANDLER entry'))
     ind_update     = lookingfor('/update', doc.css('QUERYHANDLER entry'))
     ind_update_hand = lookingfor('updateHandler', doc.css('UPDATEHANDLER entry'))
-    ind_cache      = lookingfor('queryResultCache', doc.css('CACHE entry'))
+    ind_cache = lookingfor('queryResultCache', doc.css('CACHE entry'))
     ind_doc_cache   = lookingfor('documentCache', doc.css('CACHE entry'))
     ind_fil_cache   = lookingfor('filterCache', doc.css('CACHE entry'))
 

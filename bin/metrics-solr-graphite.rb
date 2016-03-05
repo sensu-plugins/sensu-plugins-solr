@@ -55,11 +55,11 @@ class SolrGraphite < Sensu::Plugin::Metric::CLI::Graphite
     end
 
     cores.each do |core|
-      if config[:core]
-        # Don't include core name in scheme to match previous functionality
-        graphitepath = config[:scheme]
-      else
-        graphitepath = "#{config[:scheme]}.#{core}"
+      graphitepath = if config[:core]
+                       # Don't include core name in scheme to match previous functionality
+                       config[:scheme]
+                     else
+                       "#{config[:scheme]}.#{core}"
       end
       ping_url = "http://#{config[:host]}:#{config[:port]}/solr/#{core}/admin/ping?wt=json"
 
@@ -71,8 +71,8 @@ class SolrGraphite < Sensu::Plugin::Metric::CLI::Graphite
 
       stats_url = "http://#{config[:host]}:#{config[:port]}/solr/#{core}/admin/stats.jsp"
 
-      xml_data = Net::HTTP.get_response(URI.parse(stats_url)).body.gsub("\n", '')
-      stats  = Crack::XML.parse(xml_data)
+      xml_data = Net::HTTP.get_response(URI.parse(stats_url)).body.delete("\n")
+      stats = Crack::XML.parse(xml_data)
 
       # this xml is an ugly beast.
       core_searcher = stats['solr']['solr_info']['CORE']['entry'].find { |v| v['name'].strip! == 'searcher' }['stats']['stat']
