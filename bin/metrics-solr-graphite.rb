@@ -60,7 +60,7 @@ class SolrGraphite < Sensu::Plugin::Metric::CLI::Graphite
                        config[:scheme]
                      else
                        "#{config[:scheme]}.#{core}"
-      end
+                     end
       ping_url = "http://#{config[:host]}:#{config[:port]}/solr/#{core}/admin/ping?wt=json"
 
       resp = Net::HTTP.get_response(URI.parse(ping_url))

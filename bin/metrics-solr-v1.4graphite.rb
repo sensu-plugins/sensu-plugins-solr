@@ -28,7 +28,7 @@ class SolrGraphite < Sensu::Plugin::Metric::CLI::Graphite
 
   def lookingfor(needle, haystack)
     haystack.each_with_index do |element, index|
-      if element.css('name').text.strip == needle
+      if element.css('name').text.strip == needle # rubocop:disable Style/GuardClause
         return index
       else
         next
