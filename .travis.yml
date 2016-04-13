@@ -24,7 +24,7 @@ deploy:
     secure: wU7d8QX7un8g/8U9hmarfXjRR40bcwr1LKxVxTqEbv/qZiOwOvtrYDJd8RIYVwvXX0k1/e4diyu4d6Dvtkc5b5nJZuYu5xDuIsc2R96UtV9m4wWlhgU1M9Mj8QzUVQJgjwzpjgYhRAm/UFSXQXaQMEjomk0KW1o5U8KY0qYj46Y=
   gem: sensu-plugins-solr
   on:
-    ags: true
+    tags: true
     all_branches: true
     rvm: 1.9.3
     rvm: 2.0
