@@ -2,16 +2,10 @@ lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 require 'date'
-
-if RUBY_VERSION < '2.0.0'
-  require 'sensu-plugins-solr'
-else
-  require_relative 'lib/sensu-plugins-solr'
-end
+require_relative 'lib/sensu-plugins-solr'
 
 Gem::Specification.new do |s|
   s.authors                = ['Sensu-Plugins and contributors']
-
   s.date                   = Date.today.to_s
   s.description            = 'This plugin provides native Apache Solr instrumentation for monitoring
                               and metrics collection, including: service health, service connetivity, replication
@@ -30,7 +24,7 @@ Gem::Specification.new do |s|
   s.platform               = Gem::Platform::RUBY
   s.post_install_message   = 'You can use the embedded Ruby by setting EMBEDDED_RUBY=true in /etc/default/sensu'
   s.require_paths          = ['lib']
-  s.required_ruby_version  = '>= 1.9.3'
+  s.required_ruby_version  = '>= 2.0.0'
 
   s.summary                = 'Sensu plugins for solr'
   s.test_files             = s.files.grep(%r{^(test|spec|features)/})
