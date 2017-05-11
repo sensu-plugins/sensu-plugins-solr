@@ -10,6 +10,9 @@ This CHANGELOG follows the format listed at [Keep A Changelog](http://keepachang
 ### Removed
 - Ruby 1.9.3 support (@eheydrick)
 
+### Changed
+- Update to nokogiri `1.6.8.1` to address security issues (@eheydrick)
+
 ## [0.0.3] - 2015-07-14
 ### Changed
 - updated sensu-plugin gem to 1.2.0
