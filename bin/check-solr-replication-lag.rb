@@ -1,11 +1,7 @@
 #!/usr/bin/env ruby
 #
-# Push Apache Solr stats into graphite
+# Check how behind replication is.
 # ===
-#
-# TODO: Flags to narrow down needed stats only
-#
-# Copyright 2013 Kyle Burckhard <kyle@marketfish.com>
 #
 # Released under the same terms as Sensu (the MIT license); see LICENSE
 # for details.
@@ -13,26 +9,27 @@
 require 'sensu-plugin/check/cli'
 require 'rest-client'
 require 'json'
+require 'date'
 
 class SolrCheckReplication < Sensu::Plugin::Check::CLI
   option :host,
-         short:       '-h HOST',
-         long:        '--host HOST',
+         short: '-h HOST',
+         long: '--host HOST',
          description: 'Solr Host to connect to',
-         required:    true
+         required: true
 
   option :port,
-         short:        '-p PORT',
-         long:         '--port PORT',
-         description:  'Solr Port to connect to',
-         proc:         proc(&:to_i),
-         required:     true
+         short: '-p PORT',
+         long: '--port PORT',
+         description: 'Solr Port to connect to',
+         proc: proc(&:to_i),
+         required: true
 
   option :core,
          description: 'Solr Core to check',
          short: '-d CORE',
          long: '--core CORE',
-         required:     true
+         required: true
 
   option :warning,
          description: 'Warning if greater than X seconds',
@@ -46,7 +43,14 @@ class SolrCheckReplication < Sensu::Plugin::Check::CLI
          proc: proc(&:to_i),
          default: 3600
 
-  def get_url_json(url)
+  option :unknown_core,
+         short: '-u',
+         long: '--unknown-core',
+         description: 'Allow core to be missing (consider ok)',
+         boolean: true,
+         default: false
+
+  def get_url_json(url, notfoundok)
     r = RestClient::Resource.new(url, timeout: 45)
     JSON.parse(r.get)
   rescue Errno::ECONNREFUSED
@@ -54,15 +58,21 @@ class SolrCheckReplication < Sensu::Plugin::Check::CLI
   rescue RestClient::RequestTimeout
     warning 'Connection timed out'
   rescue RestClient::ResourceNotFound
-    warning "404 resource not found - #{url}"
+    if notfoundok
+      ok "404 resource not found - #{url}"
+    else
+      warning "404 resource not found - #{url}"
+    end
   rescue => e
     warning "RestClient exception: #{e.class} -> #{e.message}"
   end
 
   def run
-    data = get_url_json "http://#{config[:host]}:#{config[:port]}/solr/#{config[:core]}/replication?command=details&wt=json"
-    if data['details']['isSlave']
-      lag = (data['details']['slave']['masterDetails']['indexVersion'] - data['details']['indexVersion']) / 1000
+    data = get_url_json("http://#{config[:host]}:#{config[:port]}/solr/#{config[:core]}/replication?command=details&wt=json", config[:unknown_core])
+    details = data['details']
+    if details['isSlave'] == 'true'
+      slave_details = details['slave']
+      lag = Integer(DateTime.parse(slave_details['currentDate']).to_time - DateTime.parse(slave_details['indexReplicatedAt']).to_time)
       if lag >= config[:critical]
         critical "Replication lag exceeds #{config[:critical]} seconds (#{lag})"
       elsif lag >= config[:warning]
