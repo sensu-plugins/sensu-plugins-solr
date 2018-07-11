@@ -12,10 +12,30 @@ require 'json'
 require 'date'
 
 class SolrCheckReplication < Sensu::Plugin::Check::CLI
-  option :core_url,
-         short: '-u URL',
-         long: '--url URL',
-         description: 'Solr Core Url',
+  option :host,
+         short: '-h HOST',
+         long: '--host HOST',
+         description: 'Solr Host to connect to',
+         required: true
+
+  option :port,
+         short: '-p PORT',
+         long: '--port PORT',
+         description: 'Solr Port to connect to',
+         proc: proc(&:to_i),
+         required: true
+
+  option :secure,
+         short: '-s',
+         long: '--https',
+         description: 'Call https',
+         boolean: true,
+         default: false
+
+  option :core,
+         description: 'Solr Core to check',
+         short: '-d CORE',
+         long: '--core CORE',
          required: true
 
   option :warning,
@@ -55,7 +75,8 @@ class SolrCheckReplication < Sensu::Plugin::Check::CLI
   end
 
   def run
-    uri = "#{config[:core_url]}/replication?command=details&wt=json"
+    base_core_uri = (config[:secure] ? 'https' : 'http') + "://#{config[:host]}:#{config[:port]}/solr/#{config[:core]}"
+    uri =  "#{base_core_uri}/replication?command=details&wt=json"
     data = get_url_json(uri, config[:core_missing_ok])
     details = data['details']
     if details['isSlave'] == 'true'

@@ -24,7 +24,7 @@ require_relative '../../bin/check-solr-replication-lag.rb'
 require 'json'
 
 describe SolrCheckReplication do
-  let(:config) { %w(-u http://127.0.0.1:8983/solr/core0) }
+  let(:config) { %w(-d core0 -h 127.0.0.1 -p 8983) }
   let(:check) { described_class.new(config) }
 
   describe '#run' do
@@ -39,19 +39,19 @@ describe SolrCheckReplication do
       end
 
       context 'returns ok' do
-        let(:config) { %w(-u http://127.0.0.1:8983/solr/core0 -w 1900 -c 3600) }
+        let(:config) { %w(-d core0 -h 127.0.0.1 -p 8983 -w 1900 -c 3600) }
         it 'exists properly' do
           expect(check.run).to eq('OK: Replication lag is ok (1800)')
         end
       end
       context 'returns warning' do
-        let(:config) { %w(-u http://127.0.0.1:8983/solr/core0 -w 10 -c 3600) }
+        let(:config) { %w(-d core0 -h 127.0.0.1 -p 8983 -w 10 -c 3600) }
         it 'exists properly' do
           expect(check.run).to eq('WARNING: Replication lag exceeds 10 seconds (1800)')
         end
       end
       context 'returns critical' do
-        let(:config) { %w(-u http://127.0.0.1:8983/solr/core0 -w 1 -c 1700) }
+        let(:config) { %w(-d core0 -h 127.0.0.1 -p 8983 -w 1 -c 1700) }
         it 'exists properly' do
           expect(check.run).to eq('CRITICAL: Replication lag exceeds 1700 seconds (1800)')
         end
