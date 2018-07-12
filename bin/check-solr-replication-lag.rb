@@ -25,12 +25,11 @@ class SolrCheckReplication < Sensu::Plugin::Check::CLI
          proc: proc(&:to_i),
          required: true
 
-  option :secure,
-         short: '-s',
-         long: '--https',
-         description: 'Call https',
-         boolean: true,
-         default: false
+  option :protocol,
+         long: '--protocol PROTOCOL',
+         description: 'The connection protocol to use',
+         in: %w(http https), # this controls the acceptable inputs
+         default: 'http'
 
   option :core,
          description: 'Solr Core to check',
@@ -75,7 +74,7 @@ class SolrCheckReplication < Sensu::Plugin::Check::CLI
   end
 
   def run
-    base_core_uri = (config[:secure] ? 'https' : 'http') + "://#{config[:host]}:#{config[:port]}/solr/#{config[:core]}"
+    base_core_uri = "#{config[:protocol]}://#{config[:host]}:#{config[:port]}/solr/#{config[:core]}"
     uri =  "#{base_core_uri}/replication?command=details&wt=json"
     data = get_url_json(uri, config[:core_missing_ok])
     details = data['details']
