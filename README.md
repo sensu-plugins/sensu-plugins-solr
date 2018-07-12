@@ -12,6 +12,7 @@
  * bin/metrics-solr-graphite.rb
  * metrics-solr-v1.4graphite.rb
  * bin/metrics-solr4-graphite.rb
+ * bin/check-solr-replication-lag.rb
 
 ## Usage
 
