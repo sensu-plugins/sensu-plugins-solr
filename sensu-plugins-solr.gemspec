@@ -31,7 +31,7 @@ Gem::Specification.new do |s|
   s.version                = SensuPluginsSolr::Version::VER_STRING
 
   s.add_runtime_dependency 'sensu-plugin', '~> 1.2'
-  s.add_runtime_dependency 'crack',             '0.4.2'
+  s.add_runtime_dependency 'crack',             '= 0.4.3'
   s.add_runtime_dependency 'rest-client',       '1.8.0'
   s.add_runtime_dependency 'nokogiri',          '1.6.8.1'
 
