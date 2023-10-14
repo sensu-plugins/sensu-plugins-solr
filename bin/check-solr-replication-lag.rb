@@ -56,11 +56,29 @@ class SolrCheckReplication < Sensu::Plugin::Check::CLI
          boolean: true,
          default: false
 
-  def get_url_json(url, notfoundok)
-    r = RestClient::Resource.new(url, timeout: 45)
+  option :username,
+         description: 'Username for HTTP Basic Authentication',
+         short: '-U USERNAME',
+         long: '--username USERNAME',
+         required: false
+
+  option :password,
+         description: 'Password for HTTP Basic Authentication',
+         short: '-P PASSWORD',
+         long: '--password PASSWORD',
+         required: false
+
+  def get_url_json(url, notfoundok, username = nil, password = nil)
+    resource_options = { timeout: 45 }
+    resource_options[:user] = username if username
+    resource_options[:password] = password if password
+
+    r = RestClient::Resource.new(url, resource_options)
     JSON.parse(r.get)
   rescue Errno::ECONNREFUSED
     warning 'Connection refused'
+  rescue RestClient::Unauthorized
+    warning 'Unauthorized: Invalid credentials'
   rescue RestClient::RequestTimeout
     warning 'Connection timed out'
   rescue RestClient::ResourceNotFound
@@ -76,11 +94,11 @@ class SolrCheckReplication < Sensu::Plugin::Check::CLI
   def run
     base_core_uri = "#{config[:protocol]}://#{config[:host]}:#{config[:port]}/solr/#{config[:core]}"
     uri =  "#{base_core_uri}/replication?command=details&wt=json"
-    data = get_url_json(uri, config[:core_missing_ok])
+    data = get_url_json(uri, config[:core_missing_ok], config[:username], config[:password])
     details = data['details']
-    if details['isSlave'] == 'true'
-      slave_details = details['slave']
-      lag = (DateTime.parse(slave_details['currentDate']).to_time - DateTime.parse(slave_details['indexReplicatedAt']).to_time).to_i
+    if details['isFollower'] == 'true' || details['isSlave'] == 'true'
+      follower_details = details['follower'] || details['slave']
+      lag = (DateTime.parse(follower_details['currentDate']).to_time - DateTime.parse(follower_details['indexReplicatedAt']).to_time).to_i
       if lag >= config[:critical]
         critical "Replication lag exceeds #{config[:critical]} seconds (#{lag})"
       elsif lag >= config[:warning]
