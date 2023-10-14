@@ -18,6 +18,6 @@
 
 ## Installation
 
-[Installation and Setup](http://sensu-plugins.io/docs/installation_instructions.html)
+[Installation and Setup](https://docs.sensu.io/sensu-core/latest/installation/installing-plugins/)
 
 ## Notes
