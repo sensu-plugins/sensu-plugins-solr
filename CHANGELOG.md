@@ -5,9 +5,10 @@ This CHANGELOG follows the format listed [here](https://github.com/sensu-plugins
 
 ## [Unreleased]
 
-## [1.2.0] - 2023-10-14
+## [1.2.0] - 2023-10-16
 ### Changed
-- Changed solr replication lag check to also support solr 9.* (@danieltoader)
+- Added backwards compatible support for solr 9.x in `check-solr-replication-lag` by checking both `(follower|slave)` terms in  API response (@danieltoader)
+- Added authentication in `check-solr-replication-lag` (@danieltoader)
 
 ## [1.1.0] - 2018-07-12
 ### Added
